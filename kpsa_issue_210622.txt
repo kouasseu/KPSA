@@ -1,0 +1,24 @@
+ pcs resource disable halvmfs
+  818  pcs status
+  819  history
+  820  vgchange -ay vgcluster --config 'activation { volume_list = [ "vgcluster" ] }'
+  821  df -h
+  822  history
+  823  vgs
+  824  lvs
+  825  xfs_repair /dev/vgcluster/lv_kpsa39
+  826  xfs_repair -L /dev/vgcluster/lv_kpsa39
+  827  mount /dev/vgcluster/lv_kpsa39 /home/kpsa39/
+  828  df th
+  829  df -h
+  830  lvs
+  831  xfs_repair -L /dev/vgcluster/lv_exec_produits_ocm 
+  832  lvs
+
+
+/home/kpsa39/ocm/reference/fpProfile
+
+/home/kpsa39/ocm/reference/conf/client-adapters/CA12_JsonRestCA/G01R00C00/3rdparty
+
+/home/kpsa39/ocm/reference/conf
+
