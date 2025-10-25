@@ -1,0 +1,57 @@
+#!/bin/sh
+#subsystem file for "FP" server
+#
+# chkconfig: 2345 95 05
+# description: FP server daemon
+#
+# processname: FP
+# source function library
+
+RETVAL=0
+
+
+start() {
+         echo "starting start event" >> /tmp/log5.log
+         id >> /tmp/log5.log
+         
+         ls -lrht /home/kpsa39/ocm/reference/scripts >> /tmp/log5.log
+         cd /root
+         pwd >> /tmp/log5.log 2>&1
+         /etc/init.d/fpstart.sh >> /tmp/log5.log 2>&1 &
+         pwd >> /tmp/log5.log
+        echo "ending start event" >> /tmp/log5.log
+}
+
+stop() {
+        echo "starting stop event" >> /tmp/log5.log
+        id >> /tmp/log5.log 
+        ls -lrht /home/kpsa39/ocm/reference/scripts >> /tmp/log5.log
+        cd /root
+        pwd >> /tmp/log5.log 2>&1 &
+        /etc/init.d/fpstop.sh >> /tmp/log5.log 2>&1 &
+         pwd >> /tmp/log5.log
+        echo "ending stop event" >> /tmp/log5.log
+}
+
+status() {
+        #For thoubleshooting purposes
+        #/bin/su - kpsa39 -c '/home/kpsa39/ocm/reference/scripts/fp.ksh status'
+        RETVAL=0
+}
+
+case "$1" in
+        start)
+                start
+                ;;
+        stop)
+                stop
+                ;;
+        status)
+                status
+                ;;
+        *)
+                echo $"Usage: $0 {start|stop|status}"
+                RETVAL=1
+esac
+exit $RETVAL
+
