@@ -1,0 +1,43 @@
+-------------------------------ideale config for actif/actif------------------------------------------------------------------------
+
+pcs -f dlm_cfg resource create dlm ocf:pacemaker:controld op monitor interval=120s on-fail=fence clone interleave=true ordered=true
+
+
+pcs -f dlm_cfg resource create clvmd ocf:heartbeat:clvm op monitor interval=120s on-fail=fence clone interleave=true ordered=true
+
+pcs -f dlm_cfg constraint order start dlm-clone then clvmd-clone
+
+pcs -f dlm_cfg constraint colocation add clvmd-clone with dlm-clone
+
+--------------------------------------config make because KPSA is Actif/passif-------------------------------------------------------
+pcs resource create halvm LVM volgrpname=vgcluster exclusive=true --group halvmfs
+
+vgcluster
+
+/dev/mapper/vgcluster-lv_exec_produits_ocm
+/dev/mapper/vgcluster-lv_kpsa39
+
+/dev/vgcluster/lv_exec_produits_ocm
+/dev/vgcluster/lv_kpsa39
+/exec/produits/ocm
+
+pcs resource create halvm LVM volgrpname=vgcluster exclusive=true --group halvmfs
+
+pcs resource create xfsfs Filesystem device="/dev/vgcluster/lv_exec_produits_ocm" directory="/exec/produits/ocm" fstype="xfs" --group halvmfs
+
+pcs resource create xfs1fs  Filesystem device="/dev/vgcluster/lv_kpsa39" directory="/home/kpsa39/" fstype="xfs" --group halvmfs
+
+
+pcs resource create ClusterIP ocf:heartbeat:IPaddr2 \ ip=192.168.122.120 cidr_netmask=32 op monitor interval=30s
+
+
+pcs resource create fp ocf:heartbeat:kpsa \
+
+
+pcs constraint colocation add fp with Cluster IP INFINITY
+
+
+
+
+
+
